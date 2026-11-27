@@ -1,0 +1,50 @@
+/* ---------- Gate (inside console shell) ---------- */
+.conf-gate { display: grid; place-items: center; min-height: 520px; height: 100%; }
+.conf-gate__box { width: min(460px, 100%); }
+.conf-gate__lead { margin: 0 0 var(--w-4); font-size: var(--w-fs-sm); color: var(--w-muted); }
+.conf-gate__lead strong { color: var(--w-text); }
+.conf-gate__form { display: flex; flex-direction: column; gap: var(--w-4); }
+.conf-gate__err { color: var(--w-critical); border: 1px solid rgba(255, 48, 79, 0.5); background: rgba(255, 48, 79, 0.08); padding: 8px; text-align: center; font-family: var(--w-font-display); font-weight: 700; letter-spacing: var(--w-tracking-wide); }
+.conf-gate__ok { display: flex; flex-direction: column; gap: var(--w-3); }
+.conf-gate__granted { font-family: var(--w-font-display); font-weight: 700; font-size: 22px; letter-spacing: var(--w-tracking-wide); color: var(--w-success); text-align: center; text-shadow: 0 0 12px rgba(41, 229, 140, 0.5); }
+
+/* ---------- Environment (full screen) ---------- */
+.conf { position: relative; min-height: 100vh; display: flex; flex-direction: column; }
+.conf > *:not(.w-backdrop) { position: relative; z-index: 1; }
+.conf__bar {
+  display: flex; align-items: center; gap: var(--w-5); padding: 8px var(--w-4);
+  border-bottom: 1px solid rgba(255, 48, 79, 0.45); background: rgba(2, 7, 17, 0.92);
+}
+.conf__brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--w-font-display); font-weight: 700; letter-spacing: 0.28em; font-size: 16px; margin-right: auto; }
+.conf__timer { font-family: var(--w-font-display); font-weight: 700; letter-spacing: var(--w-tracking-wide); color: var(--w-warning); font-variant-numeric: tabular-nums; }
+.conf__timer.is-low { color: var(--w-critical); animation: w-pulse 1s ease-in-out infinite; }
+
+.conf__grid {
+  flex: 1; display: grid; gap: var(--w-3); padding: var(--w-3);
+  grid-template-columns: minmax(250px, 1fr) minmax(0, 2.2fr) minmax(280px, 1.2fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas: "left center right" "bottom bottom bottom";
+  min-height: 0;
+}
+.conf__left { grid-area: left; display: flex; flex-direction: column; gap: var(--w-3); min-height: 0; }
+.conf__center { grid-area: center; display: flex; min-height: 520px; }
+.conf__center > .w-panel { flex: 1; }
+.conf__right { grid-area: right; display: flex; flex-direction: column; gap: var(--w-3); min-height: 0; }
+.conf__right > .w-panel:first-child { min-height: 280px; }
+.conf__bottom { grid-area: bottom; display: grid; grid-template-columns: 2fr 1fr 1.4fr; gap: var(--w-3); }
+.conf__bottom > .w-panel { min-height: 170px; }
+.conf__photo { width: 140px; margin: 0 auto var(--w-4); }
+.conf__log { max-height: 130px; overflow: auto; }
+
+@media (max-width: 1200px) {
+  .conf__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "center center" "left right" "bottom bottom";
+  }
+  .conf__bottom { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .conf__grid { grid-template-columns: 1fr; grid-template-areas: "center" "left" "right" "bottom"; }
+  .conf__center { min-height: 420px; }
+  .conf__bar { flex-wrap: wrap; gap: var(--w-3); }
+}

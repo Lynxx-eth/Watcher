@@ -1,0 +1,314 @@
+/* Desktop composition mirrors the reference: wide dossier, stacked link
+   panels, globe on the right; biometrics / log / notes underneath. */
+.dash {
+  display: grid;
+  height: 100%;
+  min-height: 640px;
+  gap: var(--w-3);
+  grid-template-columns: minmax(0, 9fr) minmax(0, 7fr) minmax(0, 9fr);
+  grid-template-rows: minmax(0, 1.45fr) minmax(0, 1fr);
+  grid-template-areas:
+    "dossier links globe"
+    "bio     log   notes";
+}
+.dash > * {
+  min-width: 0;
+  min-height: 0;
+  min-height: 0;
+  display: flex;
+}
+.dash > * > .w-panel {
+  flex: 1;
+}
+.dash__dossier { grid-area: dossier; }
+.dash__links {
+  grid-area: links;
+  flex-direction: column;
+  gap: var(--w-3);
+}
+.dash__links > * { flex: 1; min-height: 0; display: flex; }
+.dash__links > * > .w-panel { flex: 1; }
+.dash__fill { flex: 1; }
+.dash__globe { grid-area: globe; }
+.dash__bio { grid-area: bio; }
+.dash__log { grid-area: log; }
+.dash__notes { grid-area: notes; }
+
+.dossier {
+  display: grid;
+  grid-template-columns: minmax(130px, 210px) minmax(0, 1fr);
+  gap: var(--w-4);
+  align-items: start;
+}
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--w-fs-sm);
+}
+.log-table th {
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  text-align: left;
+  font-weight: 400;
+  font-size: var(--w-fs-xs);
+  letter-spacing: var(--w-tracking);
+  text-transform: uppercase;
+  color: var(--w-muted);
+  padding: 6px var(--w-3);
+  border-bottom: 1px solid var(--w-border-soft);
+  background: rgba(7, 22, 37, 0.95);
+}
+.log-table--compact { font-size: 10.5px; }
+.log-table--compact th,
+.log-table--compact td {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+.log-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+  padding: 6px var(--w-3);
+  border-bottom: 1px solid rgba(0, 190, 255, 0.07);
+}
+
+/* Tablet: two columns */
+@media (max-width: 1200px) {
+  .dash {
+    height: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "dossier dossier"
+      "globe   globe"
+      "links   bio"
+      "log     log"
+      "notes   notes";
+  }
+  .dash__globe { min-height: 380px; }
+}
+
+/* Mobile: single column */
+@media (max-width: 680px) {
+  .dash {
+    grid-template-columns: 1fr;
+    grid-template-areas: "dossier" "globe" "links" "bio" "log" "notes";
+  }
+  .dossier {
+    grid-template-columns: 1fr;
+  }
+  .dossier .photo {
+    max-width: 180px;
+  }
+}
+
+.dash-state {
+  height: 100%;
+  min-height: 400px;
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- Dossier ---------- */
+.dossier__name {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.dossier__uid {
+  font-family: var(--w-font-display);
+  font-weight: 700;
+  font-size: var(--w-fs-xl);
+  letter-spacing: 0.06em;
+}
+.dossier__risk {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 600;
+  max-width: 220px;
+}
+.threat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.threat__bars {
+  display: inline-flex;
+  gap: 3px;
+}
+.threat__bars i {
+  width: 8px;
+  height: 14px;
+  background: rgba(130, 151, 178, 0.18);
+}
+
+
+/* ---------- Related records ---------- */
+.records {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.records a {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px var(--w-3);
+  color: var(--w-text);
+  border-bottom: 1px solid rgba(0, 190, 255, 0.08);
+  transition: background var(--w-dur-fast);
+}
+.records a:hover {
+  background: rgba(0, 191, 255, 0.07);
+}
+.records a > svg { color: var(--w-blue-dim); }
+.records__label {
+  font-size: var(--w-fs-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.records__meta {
+  font-size: var(--w-fs-2xs);
+  color: var(--w-faint);
+  letter-spacing: var(--w-tracking);
+  text-transform: uppercase;
+}
+
+/* ---------- Globe ---------- */
+.globe {
+  position: relative;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, rgba(0, 60, 110, 0.35), transparent 70%);
+}
+.globe canvas {
+  display: block;
+}
+.globe__loading {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: var(--w-4);
+}
+.globe__hud {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+.globe__hud--tl { top: var(--w-3); left: var(--w-3); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.globe__hud--br { right: var(--w-3); bottom: var(--w-3); }
+.globe__hud--bl { left: var(--w-3); bottom: var(--w-3); font-size: var(--w-fs-xs); }
+.globe__hud code { color: var(--w-text); }
+.globe__target {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px;
+  border-left: 2px solid var(--w-critical);
+  background: rgba(2, 7, 17, 0.65);
+  font-size: var(--w-fs-sm);
+}
+.globe__target strong {
+  font-family: var(--w-font-display);
+  font-size: var(--w-fs-lg);
+  letter-spacing: var(--w-tracking);
+  color: var(--w-critical);
+}
+.globe__subject {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 48, 79, 0.6);
+  background: rgba(40, 4, 12, 0.75);
+  font-size: var(--w-fs-sm);
+}
+.globe__inspect {
+  position: absolute;
+  z-index: 3;
+  top: var(--w-3);
+  right: var(--w-3);
+  width: min(260px, 70%);
+  padding: var(--w-3);
+  border: 1px solid var(--w-border);
+  background: rgba(4, 14, 26, 0.92);
+  backdrop-filter: blur(6px);
+}
+.globe__inspect-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-family: var(--w-font-display);
+  letter-spacing: var(--w-tracking);
+  color: var(--w-cyan);
+}
+.globe__hint {
+  position: absolute;
+  top: 10px;
+  right: var(--w-3);
+  z-index: 1;
+  pointer-events: none;
+  font-size: var(--w-fs-2xs);
+  color: var(--w-faint);
+  white-space: nowrap;
+}
+
+/* In-scene labels (rendered by drei <Html>) */
+.globe-label {
+  transform: translate(10px, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 4px 8px;
+  border: 1px solid;
+  background: rgba(2, 7, 17, 0.82);
+  font-family: var(--w-font-mono);
+  font-size: 10px;
+  color: var(--w-text);
+  white-space: nowrap;
+}
+.globe-label__id {
+  font-weight: 700;
+  letter-spacing: var(--w-tracking);
+}
+.globe-label__coord {
+  color: var(--w-muted);
+}
+
+/* ---------- Biometrics ---------- */
+.bio {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.6fr) 2fr;
+  gap: var(--w-4);
+  align-items: center;
+}
+
+/* ---------- Notes ---------- */
+.notes {
+  font-size: var(--w-fs-sm);
+}
+.notes__lead {
+  margin: 0 0 6px;
+}
+.notes ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.notes li::marker {
+  content: "– ";
+  color: var(--w-blue-dim);
+}
+.notes__status {
+  margin: 8px 0 2px;
+}
+.notes__meta {
+  margin: 0;
+  font-size: var(--w-fs-xs);
+}

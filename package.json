@@ -1,0 +1,20 @@
+{
+  "name": "watcher",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "frontend/ui",
+    "frontend/client",
+    "frontend/enroll",
+    "frontend/admin"
+  ],
+  "scripts": {
+    "dev:client": "npm run dev -w @watcher/client",
+    "dev:admin": "npm run dev -w @watcher/admin",
+    "build": "npm run build -w @watcher/client && npm run build -w @watcher/admin && npm run build -w @watcher/enroll",
+    "typecheck": "npm run typecheck -w @watcher/client && npm run typecheck -w @watcher/admin && npm run typecheck -w @watcher/enroll",
+    "fetch:textures": "node scripts/fetch-textures.mjs",
+    "dev:enroll": "npm run dev -w @watcher/enroll"
+  }
+}

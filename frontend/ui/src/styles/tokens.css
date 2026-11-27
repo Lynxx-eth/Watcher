@@ -1,0 +1,67 @@
+/* WATCHER design tokens — single source of truth for both apps. */
+:root {
+  /* Surfaces */
+  --w-bg: #020711;
+  --w-bg-2: #06111f;
+  --w-panel: #071625;
+  --w-panel-glass: rgba(7, 22, 37, 0.72);
+  --w-panel-head: rgba(0, 191, 255, 0.06);
+
+  /* Accents */
+  --w-blue: #00bfff;
+  --w-cyan: #00e5ff;
+  --w-blue-dim: rgba(0, 191, 255, 0.55);
+  --w-border: rgba(0, 190, 255, 0.35);
+  --w-border-soft: rgba(0, 190, 255, 0.16);
+  --w-grid: rgba(0, 190, 255, 0.05);
+
+  /* Text */
+  --w-text: #dcebff;
+  --w-muted: #8297b2;
+  --w-faint: #4d6280;
+
+  /* Status */
+  --w-warning: #ffb52e;
+  --w-critical: #ff304f;
+  --w-success: #29e58c;
+
+  /* Glow */
+  --w-glow: 0 0 12px rgba(0, 191, 255, 0.35);
+  --w-glow-strong: 0 0 18px rgba(0, 229, 255, 0.6), 0 0 4px rgba(0, 229, 255, 0.9);
+
+  /* Type */
+  --w-font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --w-font-display: "Rajdhani", "Oxanium", "JetBrains Mono", ui-sans-serif, system-ui, sans-serif;
+  --w-fs-2xs: 9px;
+  --w-fs-xs: 10px;
+  --w-fs-sm: 11px;
+  --w-fs-md: 12.5px;
+  --w-fs-lg: 14px;
+  --w-fs-xl: 18px;
+  --w-tracking: 0.08em;
+  --w-tracking-wide: 0.18em;
+
+  /* Spacing (4px base) */
+  --w-1: 4px;
+  --w-2: 8px;
+  --w-3: 12px;
+  --w-4: 16px;
+  --w-5: 20px;
+  --w-6: 24px;
+  --w-8: 32px;
+
+  /* Shape — deliberately sharp */
+  --w-radius: 2px;
+  --w-bracket: 10px;
+
+  /* Layout */
+  --w-header-h: 56px;
+  --w-nav-h: 36px;
+  --w-status-h: 30px;
+  --w-banner-h: 24px;
+
+  /* Motion */
+  --w-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --w-dur-fast: 140ms;
+  --w-dur: 280ms;
+}

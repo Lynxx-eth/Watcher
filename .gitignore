@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+backend/.venv/
+backend/uploads/
+__pycache__/
+*.pyc
+frontend/client/public/textures/earth/*.jpg
+frontend/client/public/textures/earth/*.png

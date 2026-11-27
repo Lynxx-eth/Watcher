@@ -1,0 +1,14 @@
+# Local PostgreSQL for development: `docker compose up -d db`
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: watcher
+      POSTGRES_PASSWORD: watcher-dev-only
+      POSTGRES_DB: watcher
+    ports:
+      - "127.0.0.1:5432:5432"   # bound to localhost only
+    volumes:
+      - watcher-db:/var/lib/postgresql/data
+volumes:
+  watcher-db:

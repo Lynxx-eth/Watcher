@@ -1,0 +1,101 @@
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--w-bg);
+  color: var(--w-text);
+  font-family: var(--w-font-mono);
+  font-size: var(--w-fs-md);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(0, 229, 255, 0.28);
+  color: #fff;
+}
+
+a {
+  color: var(--w-blue);
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 1px solid var(--w-cyan);
+  outline-offset: 2px;
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 191, 255, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(0, 191, 255, 0.35);
+}
+
+/* Utility classes shared by both apps */
+.w-label {
+  font-size: var(--w-fs-xs);
+  letter-spacing: var(--w-tracking-wide);
+  text-transform: uppercase;
+  color: var(--w-muted);
+}
+.w-value {
+  font-size: var(--w-fs-md);
+  color: var(--w-text);
+}
+.w-mono-num {
+  font-variant-numeric: tabular-nums;
+}
+.w-c-blue { color: var(--w-blue); }
+.w-c-cyan { color: var(--w-cyan); }
+.w-c-warn { color: var(--w-warning); }
+.w-c-crit { color: var(--w-critical); }
+.w-c-ok { color: var(--w-success); }
+.w-c-muted { color: var(--w-muted); }
+
+.w-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

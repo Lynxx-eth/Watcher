@@ -1,0 +1,10 @@
+{
+  "name": "@watcher/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./constants": "./constants/index.ts",
+    "./types": "./types/index.ts"
+  }
+}
