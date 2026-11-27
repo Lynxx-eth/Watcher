@@ -1,9 +1,15 @@
+import os
+import sys
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-import app.models  # noqa: F401  (registers every table on Base.metadata)
+# Ensure the backend/ directory (which holds the `app` package) is importable,
+# regardless of the working directory Alembic is invoked from (e.g. on Render).
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import app.models  # noqa: E402, F401  (registers every table on Base.metadata)
 from app.core.config import get_settings
 from app.database.session import Base, normalise_db_url
 
