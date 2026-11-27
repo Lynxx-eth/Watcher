@@ -15,12 +15,43 @@ from app.database.session import engine
 settings = get_settings()
 
 
+def _bootstrap_admin() -> None:
+    """
+    Create the first admin from ADMIN_USER / ADMIN_PASSWORD env vars, but only
+    when no admin exists yet. Lets hosts without shell access (Render free)
+    create an admin without a CLI. Idempotent and never overwrites.
+    """
+    user = settings.admin_user.strip()
+    pw = settings.admin_password
+    if not user or not pw:
+        return
+    if len(pw) < 8:
+        print("WATCHER: ADMIN_PASSWORD too short (min 8) — skipping admin bootstrap.")
+        return
+    try:
+        from sqlalchemy import func, select
+
+        from app.database.session import SessionLocal
+        from app.models import AdminUser
+        from app.security.hashing import hash_secret
+
+        with SessionLocal() as db:
+            if db.scalar(select(func.count()).select_from(AdminUser)):
+                return  # an admin already exists; leave everything alone
+            db.add(AdminUser(username=user, password_hash=hash_secret(pw), role="owner"))
+            db.commit()
+            print(f"WATCHER: bootstrapped admin '{user}'.")
+    except Exception as exc:  # never let bootstrap take down the API
+        print(f"WATCHER: admin bootstrap skipped ({exc!r}).")
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     # Refuse to boot with insecure settings in production, rather than ship them.
     problems = settings.production_problems()
     if problems:
         raise RuntimeError("Unsafe production configuration:\n  - " + "\n  - ".join(problems))
+    _bootstrap_admin()
     yield
 
 

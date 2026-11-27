@@ -58,6 +58,12 @@ class Settings(BaseSettings):
     demo_project_id: str = "demo-0000"
     demo_pin: str = ""
 
+    # First-admin bootstrap (for hosts without shell access, e.g. Render free).
+    # If both are set AND no admin exists yet, one is created on startup.
+    # Safe to leave set afterwards — it's skipped once an admin exists.
+    admin_user: str = ""
+    admin_password: str = ""
+
     @property
     def cors_origins(self) -> list[str]:
         return [self.client_origin, self.admin_origin, self.enroll_origin]

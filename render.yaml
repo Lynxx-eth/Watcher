@@ -44,3 +44,8 @@ services:
       # Optional: a 4–12 digit PIN for the fictional demo profile. Leave unset to skip it.
       - key: DEMO_PIN
         sync: false
+      # Set these once to auto-create your first admin on startup (no shell needed).
+      - key: ADMIN_USER
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
