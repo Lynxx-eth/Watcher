@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -20,6 +21,13 @@ class Settings(BaseSettings):
     client_cookie_name: str = "watcher_client"
     client_session_hours: int = 8
     cookie_secure: bool = True  # set false only for http://localhost development
+    # "strict" works when the sites and API share an origin (dev, or one-app hosting).
+    # Set "none" when the frontends are on a different domain than the API (e.g. Vercel
+    # sites + Render API); that is the only way the browser will send the cookie
+    # cross-site, and it requires cookie_secure=true (HTTPS). CSRF is still covered by
+    # the required X-Watcher-Request header, which cross-site callers can't set without
+    # a CORS preflight that only our own origins pass.
+    cookie_samesite: Literal["strict", "lax", "none"] = "strict"
 
     # Admin sessions (separate cookie, shorter life)
     admin_cookie_name: str = "watcher_admin"
@@ -65,6 +73,8 @@ class Settings(BaseSettings):
             return problems
         if not self.cookie_secure:
             problems.append("COOKIE_SECURE must be true in production (cookies require HTTPS).")
+        if self.cookie_samesite == "none" and not self.cookie_secure:
+            problems.append("COOKIE_SAMESITE=none requires COOKIE_SECURE=true (browsers reject it otherwise).")
         if "localhost" in self.database_url or "watcher:watcher@" in self.database_url:
             problems.append("DATABASE_URL still points at the development default.")
         if any(o.startswith("http://") for o in self.cors_origins):

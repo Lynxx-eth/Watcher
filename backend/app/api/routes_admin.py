@@ -44,7 +44,7 @@ def admin_login(request: Request, response: Response, body: AdminLoginIn, db: Db
         max_age=settings.admin_session_minutes * 60,
         httponly=True,
         secure=settings.cookie_secure,
-        samesite="strict",
+        samesite=settings.cookie_samesite,
         path="/api/admin",
     )
     return AdminMeOut(username=admin.username, role=admin.role)
@@ -60,7 +60,7 @@ def admin_logout(request: Request, db: DbDep, settings: SettingsDep) -> Response
     end_admin_session(db, request.cookies.get(settings.admin_cookie_name))
     resp = Response(status_code=status.HTTP_204_NO_CONTENT)
     resp.delete_cookie(settings.admin_cookie_name, path="/api/admin", secure=settings.cookie_secure,
-                       httponly=True, samesite="strict")
+                       httponly=True, samesite=settings.cookie_samesite)
     return resp
 
 

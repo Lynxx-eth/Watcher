@@ -17,7 +17,7 @@ def set_client_cookie(response: Response, settings: Settings, token: str) -> Non
         max_age=settings.client_session_hours * 3600,
         httponly=True,
         secure=settings.cookie_secure,
-        samesite="strict",
+        samesite=settings.cookie_samesite,
         path="/api",
     )
 
@@ -52,5 +52,5 @@ def logout(request: Request, db: DbDep, settings: SettingsDep) -> Response:
     db.commit()
     resp = Response(status_code=status.HTTP_204_NO_CONTENT)
     resp.delete_cookie(settings.client_cookie_name, path="/api", secure=settings.cookie_secure,
-                       httponly=True, samesite="strict")
+                       httponly=True, samesite=settings.cookie_samesite)
     return resp

@@ -1,0 +1,46 @@
+# Render Blueprint — provisions the API + PostgreSQL in one go.
+# In Render: New + → Blueprint → pick this repo + the watcher-fullstack branch.
+# After it deploys, set the three *_ORIGIN values to your Vercel site URLs
+# (see DEPLOY.md), and run the one-time admin/seed commands in the Render Shell.
+databases:
+  - name: watcher-db
+    plan: free
+    databaseName: watcher
+    user: watcher
+
+services:
+  - type: web
+    name: watcher-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # Migrations run on each deploy, then the API starts.
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: watcher-db
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: "true"
+      # Sites are on a different domain (Vercel) than this API, so the cookie
+      # must be cross-site. Requires HTTPS, which Render provides.
+      - key: COOKIE_SAMESITE
+        value: none
+      # Set these to your three Vercel site URLs after they're created (DEPLOY.md).
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: ADMIN_ORIGIN
+        sync: false
+      - key: ENROLL_ORIGIN
+        sync: false
+      # Your contact, per the Nominatim usage policy.
+      - key: GEOCODER_USER_AGENT
+        sync: false
+      # Optional: a 4–12 digit PIN for the fictional demo profile. Leave unset to skip it.
+      - key: DEMO_PIN
+        sync: false
