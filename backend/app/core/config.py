@@ -58,6 +58,21 @@ class Settings(BaseSettings):
     def is_production(self) -> bool:
         return self.environment == "production"
 
+    def production_problems(self) -> list[str]:
+        """Insecure settings that must not ship. Empty list = safe to run in production."""
+        problems: list[str] = []
+        if not self.is_production:
+            return problems
+        if not self.cookie_secure:
+            problems.append("COOKIE_SECURE must be true in production (cookies require HTTPS).")
+        if "localhost" in self.database_url or "watcher:watcher@" in self.database_url:
+            problems.append("DATABASE_URL still points at the development default.")
+        if any(o.startswith("http://") for o in self.cors_origins):
+            problems.append("Frontend origins must use https:// in production.")
+        if self.geocoder_enabled and "set GEOCODER_USER_AGENT" in self.geocoder_user_agent:
+            problems.append("Set GEOCODER_USER_AGENT to a real contact (Nominatim usage policy).")
+        return problems
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -1,6 +1,28 @@
 # WATCHER
 
-> Current build: **Phase 10** + structure update. Earlier phase notes below still apply.
+> Current build: **Phase 11** (hardening). Earlier phase notes below still apply.
+
+## Phase 11 — hardening & one-command setup
+
+- **Fails fast on unsafe production config.** On startup in `ENVIRONMENT=production` the API refuses to boot if `COOKIE_SECURE` is off, the database URL is still the dev default, any frontend origin is `http://`, or `GEOCODER_USER_AGENT` is unset (`Settings.production_problems()`).
+- **Stronger security headers** on every response: a strict `Content-Security-Policy` (`default-src 'none'`), `Permissions-Policy`, `Cross-Origin-Resource-Policy`, and `Strict-Transport-Security` when cookies are secure — alongside the existing nosniff / DENY / no-referrer / no-store and the CSRF header check.
+- **Request IDs:** every response carries `X-Request-ID` (echoed from the request or generated) for tracing.
+- **Readiness probe:** `GET /api/ready` runs `SELECT 1` and returns 503 if the database is unreachable (`/api/health` stays a plain liveness check).
+- **Expired-session cleanup:** `make purge` / `python -m app.cli purge-sessions` deletes expired client + admin sessions — run it on an hourly cron.
+- **One-command setup:** a `Makefile` (run `make help`) and `backend/scripts/setup.sh`. `make setup` does the whole backend (venv, deps, `.env`, Postgres, migrate, seed) plus the frontend install.
+- **Runnable unit tests without the server stack:** `backend/tests_unit/` holds the photo-pipeline tests (Pillow only) — `cd backend && PYTHONPATH=. pytest tests_unit -q` (7 tests, verified passing). The full suite in `backend/tests/` still needs FastAPI/SQLAlchemy installed.
+
+### Quick start
+```bash
+make setup           # backend venv+deps+db+migrate+seed, and npm install
+# set DEMO_PIN in backend/.env, then:
+make seed
+make admin           # create your admin login
+make dev-backend     # :8000   (one terminal each)
+make dev-client      # :5173   sign in
+make dev-enroll      # :5175   create a profile
+make dev-admin       # :5174   admin
+```
 
 A fictional intelligence-console experience for **self-created** profiles. It is made up of a main client app, a **separate enrolment site**, a separate admin app and a FastAPI backend. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full plan.
 

@@ -4,6 +4,7 @@ Management commands:
     python -m app.cli seed-demo        # create/refresh the fictional demo profile
     python -m app.cli create-admin     # create an admin account (prompts for password)
     python -m app.cli geocode-pending  # resolve coordinates for profiles not yet geocoded
+    python -m app.cli purge-sessions   # delete expired sessions (run on a schedule)
 """
 
 import getpass
@@ -41,6 +42,15 @@ def cmd_create_admin() -> None:
     print(f"Admin '{username}' created.")
 
 
+def cmd_purge_sessions() -> None:
+    """Delete expired client + admin sessions (safe to run on a schedule, e.g. hourly cron)."""
+    from app.services.maintenance import purge_expired_sessions
+
+    with SessionLocal() as db:
+        clients, admins = purge_expired_sessions(db)
+        print(f"Purged {clients} client and {admins} admin session(s).")
+
+
 def cmd_geocode_pending() -> None:
     """Geocode every profile whose location hasn't been attempted yet (throttled to 1 req/s)."""
     from app.models import Profile, ProfileLocation
@@ -54,7 +64,12 @@ def cmd_geocode_pending() -> None:
         print(f"{len(rows)} profile(s) processed.")
 
 
-COMMANDS = {"seed-demo": cmd_seed_demo, "create-admin": cmd_create_admin, "geocode-pending": cmd_geocode_pending}
+COMMANDS = {
+    "seed-demo": cmd_seed_demo,
+    "create-admin": cmd_create_admin,
+    "geocode-pending": cmd_geocode_pending,
+    "purge-sessions": cmd_purge_sessions,
+}
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or sys.argv[1] not in COMMANDS:

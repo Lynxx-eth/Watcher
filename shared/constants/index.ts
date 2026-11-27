@@ -4,8 +4,8 @@ export const PRODUCT = {
   name: "WATCHER",
   clientTitle: "Intelligence Operations Centre",
   adminTitle: "Profile Administration",
-  version: "0.10.0",
-  build: "PHASE-10",
+  version: "0.11.0",
+  build: "PHASE-11",
 } as const;
 
 /** Shown on every page of both apps. Kept short enough to fit one line on desktop. */
