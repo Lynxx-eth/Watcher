@@ -66,7 +66,15 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins(self) -> list[str]:
-        return [self.client_origin, self.admin_origin, self.enroll_origin]
+        # Normalise: strip whitespace and any trailing slash so a value like
+        # "https://site.vercel.app/" still matches the browser Origin header
+        # (which never includes a trailing slash). Drop blanks, de-duplicate.
+        seen: list[str] = []
+        for raw in (self.client_origin, self.admin_origin, self.enroll_origin):
+            o = (raw or "").strip().rstrip("/")
+            if o and o not in seen:
+                seen.append(o)
+        return seen
 
     @property
     def is_production(self) -> bool:
